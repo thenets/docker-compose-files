@@ -1,0 +1,33 @@
+version: "3.3"
+services:
+
+  traefik:
+    image: "traefik:v2.2"
+    container_name: "traefik"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  jenkins:
+    image: jenkins/jenkins
+    container_name: "jenkins-master"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: unless-stopped
+    volumes:
+      - "/opt/volumes/jenkins_home:/var/jenkins_home"
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jenkins.rule=PathPrefix(``)"
+      - "traefik.http.routers.jenkins.entrypoints=web"
+      - "traefik.port=8080"
