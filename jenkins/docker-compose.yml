@@ -35,6 +35,5 @@ services:
       - "/opt/volumes/jenkins_home:/var/jenkins_home"
       - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
-      - "traefik.enable=true"
       - "traefik.http.routers.jenkins.rule=PathPrefix(``)"
       - "traefik.http.routers.jenkins.entrypoints=web"
