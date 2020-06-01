@@ -38,4 +38,3 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.jenkins.rule=PathPrefix(``)"
       - "traefik.http.routers.jenkins.entrypoints=web"
-      - "traefik.port=8080"
