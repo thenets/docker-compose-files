@@ -4,11 +4,6 @@ services:
   traefik:
     image: "traefik:v2.2"
     container_name: "traefik"
-    restart: unless-stopped
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: unless-stopped
     command:
       #- "--log.level=DEBUG"
       - "--api.insecure=true"
@@ -19,14 +14,13 @@ services:
       - "80:80"
       - "8080:8080"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "/usr/bin/docker:/usr/bin/docker:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
 
   jenkins:
     image: jenkinsci/blueocean
     container_name: "jenkins-master"
     user: root
-    restart: unless-stopped
     deploy:
       replicas: 1
       restart_policy:
@@ -35,5 +29,7 @@ services:
       - "/opt/volumes/jenkins_home:/var/jenkins_home"
       - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
+      - "traefik.port=8080"
+      - "traefik.enable=true"
       - "traefik.http.routers.jenkins.rule=PathPrefix(``)"
       - "traefik.http.routers.jenkins.entrypoints=web"
