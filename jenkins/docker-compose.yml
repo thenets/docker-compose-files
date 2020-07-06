@@ -29,7 +29,7 @@ services:
       - "/opt/volumes/jenkins_home:/var/jenkins_home"
       - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
-      - "traefik.port=8080"
       - "traefik.enable=true"
-      - "traefik.http.routers.jenkins.rule=PathPrefix(``)"
+      - "traefik.http.routers.jenkins.rule=PathPrefix(`/{path:.*}`)"
       - "traefik.http.routers.jenkins.entrypoints=web"
+      - "traefik.http.services.hello.loadbalancer.server.port=8080"
